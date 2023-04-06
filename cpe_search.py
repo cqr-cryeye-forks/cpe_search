@@ -125,10 +125,7 @@ def update(cpe_version):
                     cpe = unquote(cpe)
                 cpe_mod = cpe.replace("_", ":")
 
-                if i == 0:
-                    cpe_elems = cpe_mod[7:].split(":")
-                else:
-                    cpe_elems = cpe_mod[10:].split(":")
+                cpe_elems = cpe_mod[7:].split(":") if i == 0 else cpe_mod[10:].split(":")
 
                 cpe_name_elems = cpe_name.split()
                 words = TEXT_TO_VECTOR_RE.findall(" ".join(cpe_elems + cpe_name_elems))
