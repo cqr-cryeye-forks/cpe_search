@@ -515,6 +515,7 @@ def _match_cpe23_to_cpe23_from_dict_file(cpe23_in):
             pot_new_cpe += ":*"
 
     pre_cpe_in = cpe23_in
+
     while pre_cpe_in.count(":") > 3:  # break if next cpe part would be vendor part
         pre_cpe_in = pre_cpe_in[:-1]
         if (
