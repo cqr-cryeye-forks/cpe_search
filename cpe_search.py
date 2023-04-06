@@ -25,8 +25,8 @@ CPE_DICT_URL = (
     "https://nvd.nist.gov/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.zip"
 )
 CPE_DATA_FILES = {
-    "2.2": SCRIPT_DIR.joinpath("cpe-search-dictionary_v2.2.csv"),
-    "2.3": SCRIPT_DIR.joinpath("cpe-search-dictionary_v2.3.csv"),
+    "2.2": str(SCRIPT_DIR.joinpath("cpe-search-dictionary_v2.2.csv")),
+    "2.3": str(SCRIPT_DIR.joinpath("cpe-search-dictionary_v2.3.csv")),
 }
 CPE_DICT_ITEM_RE = re.compile(
     r"<cpe-item name=\"([^\"]*)\">.*?<title xml:lang=\"en-US\"[^>]*>([^<]*)</title>.*?<cpe-23:cpe23-item name=\"([^\"]*)\"",
@@ -522,11 +522,7 @@ def _match_cpe23_to_cpe23_from_dict_file(cpe23_in):
                 pre_cpe_in.endswith(":") or pre_cpe_in.count(":") > 9
         ):  # skip rear parts in fixing process
             continue
-        try:
-            debug = SCRIPT_DIR.joinpath("cpe-search-dictionary_v2.2.csv").read_text()
-        except FileNotFoundError:
-            print([item for item in SCRIPT_DIR.glob("*")])
-            raise FileNotFoundError
+
         path_to_cpe_storage = SCRIPT_DIR.joinpath("cpe-search-dictionary_v2.3.csv")
         fout = path_to_cpe_storage.read_text()
         for line in fout:
