@@ -522,7 +522,11 @@ def _match_cpe23_to_cpe23_from_dict_file(cpe23_in):
                 pre_cpe_in.endswith(":") or pre_cpe_in.count(":") > 9
         ):  # skip rear parts in fixing process
             continue
-        debug = fout = SCRIPT_DIR.joinpath("cpe-search-dictionary_v2.2.csv").read_text()
+        try:
+            debug = SCRIPT_DIR.joinpath("cpe-search-dictionary_v2.2.csv").read_text()
+        except FileNotFoundError:
+            print([item for item in SCRIPT_DIR.glob("*")])
+            raise FileNotFoundError
         path_to_cpe_storage = SCRIPT_DIR.joinpath("cpe-search-dictionary_v2.3.csv")
         fout = path_to_cpe_storage.read_text()
         for line in fout:
