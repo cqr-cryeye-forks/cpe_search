@@ -522,32 +522,33 @@ def _match_cpe23_to_cpe23_from_dict_file(cpe23_in):
         ):  # skip rear parts in fixing process
             continue
 
-        with open(CPE_DATA_FILES["2.3"], "r") as fout:
-            for line in fout:
-                cpe = line.rsplit(";", maxsplit=2)[0].strip()
+        path_to_cpe_storage = SCRIPT_DIR.joinpath(CPE_DATA_FILES["2.3"])
+        fout = path_to_cpe_storage.read_text()
+        for line in fout:
+            cpe = line.rsplit(";", maxsplit=2)[0].strip()
 
-                if cpe23_in == cpe:
-                    return cpe23_in
-                if pot_new_cpe and pot_new_cpe == cpe:
-                    return pot_new_cpe
+            if cpe23_in == cpe:
+                return cpe23_in
+            if pot_new_cpe and pot_new_cpe == cpe:
+                return pot_new_cpe
 
-                if pre_cpe_in in cpe:
-                    # stitch together the found prefix and the remaining part of the original CPE
-                    if cpe23_in[len(pre_cpe_in)] == ":":
-                        cpe_in_add_back = cpe23_in[len(pre_cpe_in) + 1:]
-                    else:
-                        cpe_in_add_back = cpe23_in[len(pre_cpe_in):]
-                    new_cpe = "%s:%s" % (pre_cpe_in, cpe_in_add_back)
+            if pre_cpe_in in cpe:
+                # stitch together the found prefix and the remaining part of the original CPE
+                if cpe23_in[len(pre_cpe_in)] == ":":
+                    cpe_in_add_back = cpe23_in[len(pre_cpe_in) + 1:]
+                else:
+                    cpe_in_add_back = cpe23_in[len(pre_cpe_in):]
+                new_cpe = "%s:%s" % (pre_cpe_in, cpe_in_add_back)
 
-                    # get new_cpe to full CPE 2.3 length by adding or removing wildcards
-                    while new_cpe.count(":") < 12:
-                        new_cpe += ":*"
-                    if new_cpe.count(":") > 12:
-                        new_cpe = new_cpe[: new_cpe.rfind(":")]
+                # get new_cpe to full CPE 2.3 length by adding or removing wildcards
+                while new_cpe.count(":") < 12:
+                    new_cpe += ":*"
+                if new_cpe.count(":") > 12:
+                    new_cpe = new_cpe[: new_cpe.rfind(":")]
 
-                    # if a matching CPE was found, return it
-                    if is_cpe_equal(new_cpe, cpe):
-                        return cpe
+                # if a matching CPE was found, return it
+                if is_cpe_equal(new_cpe, cpe):
+                    return cpe
     return ""
 
 
