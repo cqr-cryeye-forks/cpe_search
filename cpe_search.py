@@ -523,7 +523,7 @@ def _match_cpe23_to_cpe23_from_dict_file(cpe23_in):
         ):  # skip rear parts in fixing process
             continue
 
-        path_to_cpe_storage = SCRIPT_DIR.joinpath(CPE_DATA_FILES["2.3"])
+        path_to_cpe_storage = SCRIPT_DIR.joinpath("cpe-search-dictionary_v2.3.csv")
         fout = path_to_cpe_storage.read_text()
         for line in fout:
             cpe = line.rsplit(";", maxsplit=2)[0].strip()
