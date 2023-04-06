@@ -135,7 +135,7 @@ def update(cpe_version):
                 cpe_tf = Counter(words)
                 for term, tf in cpe_tf.items():
                     cpe_tf[term] = tf / len(cpe_tf)
-                cpe_abs = math.sqrt(sum([cnt ** 2 for cnt in cpe_tf.values()]))
+                cpe_abs = math.sqrt(sum([cnt**2 for cnt in cpe_tf.values()]))
 
                 cpe_info = (cpe, cpe_tf, cpe_abs)
                 if i == 0:
@@ -183,10 +183,10 @@ def _get_alternative_queries(init_queries, zero_extend_versions=False):
                 continue
 
             if (
-                    seen_first_break
-                    and splits < maxsplit
-                    and char not in cur_char_class
-                    and not did_split
+                seen_first_break
+                and splits < maxsplit
+                and char not in cur_char_class
+                and not did_split
             ):
                 pot_alt_query += " "
                 did_split = True
@@ -247,12 +247,12 @@ def _load_cpe_tfs(cpe_version="2.3"):
 
 
 def _search_cpes(
-        queries_raw,
-        cpe_version,
-        count,
-        threshold,
-        zero_extend_versions=False,
-        keep_data_in_memory=False,
+    queries_raw,
+    cpe_version,
+    count,
+    threshold,
+    zero_extend_versions=False,
+    keep_data_in_memory=False,
 ):
     """Facilitate CPE search as specified by the program arguments"""
 
@@ -270,7 +270,7 @@ def _search_cpes(
         query_tf = Counter(TEXT_TO_VECTOR_RE.findall(query))
         for term, tf in query_tf.items():
             query_tf[term] = tf / len(query_tf)
-        query_abs = math.sqrt(sum([cnt ** 2 for cnt in query_tf.values()]))
+        query_abs = math.sqrt(sum([cnt**2 for cnt in query_tf.values()]))
         query_infos[query] = (query_tf, query_abs)
         most_similar[query] = [("N/A", -1)]
 
@@ -301,8 +301,8 @@ def _search_cpes(
                 cpe_base = ":".join(cpe.split(":")[:5]) + ":"
                 if sim_score > most_similar[query][0][1]:
                     most_similar[query] = [(cpe, sim_score)] + most_similar[query][
-                                                               : count - 1
-                                                               ]
+                        : count - 1
+                    ]
                 elif len(most_similar[query]) < count and not most_similar[query][0][
                     0
                 ].startswith(cpe_base):
@@ -310,7 +310,7 @@ def _search_cpes(
                 elif not most_similar[query][0][0].startswith(cpe_base):
                     insert_idx = None
                     for i, (cur_cpe, cur_sim_score) in enumerate(
-                            most_similar[query][1:]
+                        most_similar[query][1:]
                     ):
                         if sim_score > cur_sim_score:
                             if not cur_cpe.startswith(cpe_base):
@@ -318,9 +318,9 @@ def _search_cpes(
                             break
                     if insert_idx:
                         most_similar[query] = (
-                                most_similar[query][:insert_idx]
-                                + [(cpe, sim_score)]
-                                + most_similar[query][insert_idx:-1]
+                            most_similar[query][:insert_idx]
+                            + [(cpe, sim_score)]
+                            + most_similar[query][insert_idx:-1]
                         )
     else:
         # iterate over every CPE, for every query compute similarity scores and keep track of most similar
@@ -350,8 +350,8 @@ def _search_cpes(
                     cpe_base = ":".join(cpe.split(":")[:5]) + ":"
                     if sim_score > most_similar[query][0][1]:
                         most_similar[query] = [(cpe, sim_score)] + most_similar[query][
-                                                                   : count - 1
-                                                                   ]
+                            : count - 1
+                        ]
                     elif len(most_similar[query]) < count and not most_similar[query][
                         0
                     ][0].startswith(cpe_base):
@@ -359,7 +359,7 @@ def _search_cpes(
                     elif not most_similar[query][0][0].startswith(cpe_base):
                         insert_idx = None
                         for i, (cur_cpe, cur_sim_score) in enumerate(
-                                most_similar[query][1:]
+                            most_similar[query][1:]
                         ):
                             if sim_score > cur_sim_score:
                                 if not cur_cpe.startswith(cpe_base):
@@ -367,18 +367,18 @@ def _search_cpes(
                                 break
                         if insert_idx:
                             most_similar[query] = (
-                                    most_similar[query][:insert_idx]
-                                    + [(cpe, sim_score)]
-                                    + most_similar[query][insert_idx:-1]
+                                most_similar[query][:insert_idx]
+                                + [(cpe, sim_score)]
+                                + most_similar[query][insert_idx:-1]
                             )
 
     # create intermediate results (including any additional queries)
     intermediate_results = {}
     for query in queries:
         if (
-                most_similar[query]
-                and len(most_similar[query]) == 1
-                and most_similar[query][0][1] == -1
+            most_similar[query]
+            and len(most_similar[query]) == 1
+            and most_similar[query][0][1] == -1
         ):
             continue
 
@@ -398,7 +398,7 @@ def _search_cpes(
         query = query_raw.lower()
 
         if query not in intermediate_results and (
-                query not in alt_queries_mapping or not alt_queries_mapping[query]
+            query not in alt_queries_mapping or not alt_queries_mapping[query]
         ):
             continue
 
@@ -412,8 +412,8 @@ def _search_cpes(
                 if alt_query not in intermediate_results:
                     continue
                 if (
-                        not most_similar
-                        or intermediate_results[alt_query][0][1] > most_similar[0][1]
+                    not most_similar
+                    or intermediate_results[alt_query][0][1] > most_similar[0][1]
                 ):
                     most_similar = intermediate_results[alt_query]
             results[query_raw] = most_similar
@@ -473,7 +473,7 @@ def _match_cpe23_to_cpe23_from_dict_memory(cpe23_in):
     while pre_cpe_in.count(":") > 3:  # break if next cpe part would be vendor part
         pre_cpe_in = pre_cpe_in[:-1]
         if (
-                pre_cpe_in.endswith(":") or pre_cpe_in.count(":") > 9
+            pre_cpe_in.endswith(":") or pre_cpe_in.count(":") > 9
         ):  # skip rear parts in fixing process
             continue
 
@@ -481,9 +481,9 @@ def _match_cpe23_to_cpe23_from_dict_memory(cpe23_in):
             if pre_cpe_in in pot_cpe:
                 # stitch together the found prefix and the remaining part of the original CPE
                 if cpe23_in[len(pre_cpe_in)] == ":":
-                    cpe_in_add_back = cpe23_in[len(pre_cpe_in) + 1:]
+                    cpe_in_add_back = cpe23_in[len(pre_cpe_in) + 1 :]
                 else:
-                    cpe_in_add_back = cpe23_in[len(pre_cpe_in):]
+                    cpe_in_add_back = cpe23_in[len(pre_cpe_in) :]
                 new_cpe = "%s:%s" % (pre_cpe_in, cpe_in_add_back)
 
                 # get new_cpe to full CPE 2.3 length by adding or removing wildcards
@@ -519,11 +519,16 @@ def _match_cpe23_to_cpe23_from_dict_file(cpe23_in):
     while pre_cpe_in.count(":") > 3:  # break if next cpe part would be vendor part
         pre_cpe_in = pre_cpe_in[:-1]
         if (
-                pre_cpe_in.endswith(":") or pre_cpe_in.count(":") > 9
+            pre_cpe_in.endswith(":") or pre_cpe_in.count(":") > 9
         ):  # skip rear parts in fixing process
             continue
 
         path_to_cpe_storage = SCRIPT_DIR.joinpath("cpe-search-dictionary_v2.3.csv")
+
+        print(SCRIPT_DIR)
+        print(list(SCRIPT_DIR.iterdir()))
+        print(path_to_cpe_storage.exists())
+
         fout = path_to_cpe_storage.read_text()
         for line in fout:
             cpe = line.rsplit(";", maxsplit=2)[0].strip()
@@ -536,9 +541,9 @@ def _match_cpe23_to_cpe23_from_dict_file(cpe23_in):
             if pre_cpe_in in cpe:
                 # stitch together the found prefix and the remaining part of the original CPE
                 if cpe23_in[len(pre_cpe_in)] == ":":
-                    cpe_in_add_back = cpe23_in[len(pre_cpe_in) + 1:]
+                    cpe_in_add_back = cpe23_in[len(pre_cpe_in) + 1 :]
                 else:
-                    cpe_in_add_back = cpe23_in[len(pre_cpe_in):]
+                    cpe_in_add_back = cpe23_in[len(pre_cpe_in) :]
                 new_cpe = "%s:%s" % (pre_cpe_in, cpe_in_add_back)
 
                 # get new_cpe to full CPE 2.3 length by adding or removing wildcards
@@ -608,12 +613,12 @@ def get_all_cpes(version):
 
 
 def search_cpes(
-        queries,
-        cpe_version="2.3",
-        count=3,
-        threshold=-1,
-        zero_extend_versions=False,
-        keep_data_in_memory=False,
+    queries,
+    cpe_version="2.3",
+    count=3,
+    threshold=-1,
+    zero_extend_versions=False,
+    keep_data_in_memory=False,
 ):
     if not queries:
         return {}
