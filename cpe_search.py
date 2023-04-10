@@ -526,7 +526,7 @@ def _match_cpe23_to_cpe23_from_dict_file(cpe23_in):
         print(list(SCRIPT_DIR.iterdir()))
         print(path_to_cpe_storage.exists())
 
-        fout = path_to_cpe_storage.read_text()
+        fout = path_to_cpe_storage.read_text().splitlines()
         for line in fout:
             cpe = line.rsplit(";", maxsplit=2)[0].strip()
 
